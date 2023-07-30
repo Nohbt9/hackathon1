@@ -5,6 +5,7 @@ require("./database");
 const User=require("./Models/user");
 const Site=require("./Models/web_url");
 const FavNews=require("./Models/favnews");
+const CustomNews=require("./Models/customNews");
 const path=require("path");
 const cors=require("cors");
 const app = express();
@@ -14,6 +15,30 @@ app.use(express.static(path.join(__dirname,"dist","assets")));
 // name: String,
 //     password:String,
 //     pincode:Number,
+
+app.post("/addCustomNews",async (req,res)=>{
+  try{
+    console.log(req.body);
+    await CustomNews.create({pincode:req.body.pincode,news:req.body.news});
+    res.send({code:1});
+  }catch(e){
+     res.send({code:0});
+  }
+  
+});
+
+app.post("/fetchCustomNews",async (req,res)=>{
+  try{
+   const result= await CustomNews.find({pincode:req.body.pincode});
+   console.log(result);
+    res.send(result);
+   
+  }catch(e){
+     res.send({code:0});
+  }
+  
+});
+
 app.get("/",(req,res)=>{
 res.sendFile(path.join(__dirname,"dist","index.html"));
 });
@@ -22,7 +47,16 @@ await FavNews.deleteOne({_id:req.body.id});
 const result =await FavNews.find({name:req.body.username});
 res.send(result); 
 });
-
+app.post("/changePin",async (req,res)=>{
+  
+   try{
+    const obj= await User.updateOne({username:req.body.username},{pincode:req.body.pincode})
+    res.send({code:1});
+   }catch(e){
+    res.send({code:0});
+      console.log(e.message);
+   }
+});
 app.post("/getFavNews",async (req,res)=>{
   try{
     const result=await FavNews.find({name:req.body.username});
