@@ -80,9 +80,9 @@ app.post("/addFavNews",async (req,res)=>{
        
 });
 app.post("/createUser",async (req,res)=>{
-    if(req.body.username="" || req.body.password=="" || req.body.pincode==""){
-      res.send({code:0});
-    }
+    // if(req.body.username="" || req.body.password=="" || req.body.pincode==""){
+    //   res.send({code:0});
+    // }
   const result=  await User.find({name:req.body.username});
   if(result.length==0){
     const obj =await User.create({name:req.body.username,password:req.body.password,pincode:req.body.pincode});
@@ -98,6 +98,9 @@ app.post("/createUser",async (req,res)=>{
 
 });
 app.post("/findUser",async (req,res)=>{
+  if(req.body.username==""){
+     res.send({code:0});
+  }
     const result=  await User.find({name:req.body.username});
     console.log(result);
     if(result.length==0){
