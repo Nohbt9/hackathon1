@@ -50,7 +50,7 @@ res.send(result);
 app.post("/changePin",async (req,res)=>{
   
    try{
-    const obj= await User.updateOne({username:req.body.username},{pincode:req.body.pincode})
+    const obj= await User.updateOne({name:req.body.username},{pincode:req.body.pincode})
     res.send({code:1});
    }catch(e){
     res.send({code:0});
